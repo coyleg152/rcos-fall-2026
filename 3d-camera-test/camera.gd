@@ -1,8 +1,8 @@
 extends Camera3D
 
-const MOVE_SPEED = 2.0
+const MOVE_SPEED = 2.5
 const ZOOM_SPEED = 4.0
-const FLY_SPEED = 1.5
+const FLY_SPEED = 2.0
 const H_LOOK_SPEED = 1.0
 const V_LOOK_SPEED = 0.5
 const V_LOOK_MAX = deg_to_rad(90.0)
@@ -11,13 +11,15 @@ const ORBIT_SPEED = deg_to_rad(30.0)
 const TWO_PI = deg_to_rad(360.0)
 const MIN_ORBIT_RADIUS = 2.0
 const MAX_ORBIT_RADIUS = 16.0
+const MOUSE_SENS_FREE_FLY = 0.5
+const MOUSE_SENS_ORBIT = 0.6
 
 enum {
 	MODE_FREE_FLY = 0,
 	MODE_ORBIT = 1,
 }
 
-var camera_mode = MODE_FREE_FLY
+var camera_mode = MODE_ORBIT
 var orbit_angle = deg_to_rad(45.0)
 var orbit_tilt = deg_to_rad(-10.0)
 var orbit_radius = 10.0
@@ -27,7 +29,7 @@ var mouse_coords = Vector2(0.0, 0.0)
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass # Replace with function body.
+	pass
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -65,11 +67,11 @@ func camera_free_fly(delta: float):
 	if Input.is_action_pressed("MoveRight"):
 		position.z -= sin(rotation.y) * MOVE_SPEED * delta
 		position.x += cos(rotation.y) * MOVE_SPEED * delta
-
 	if Input.is_action_pressed("FlyUp"):
 		position.y += FLY_SPEED * delta
 	if Input.is_action_pressed("FlyDown"):
 		position.y -= FLY_SPEED * delta
+
 	if Input.is_action_pressed("LookLeft"):
 		rotation.y += H_LOOK_SPEED * delta
 	if Input.is_action_pressed("LookRight"):
@@ -78,6 +80,17 @@ func camera_free_fly(delta: float):
 		rotation.x = min(V_LOOK_MAX, rotation.x + V_LOOK_SPEED * delta)
 	if Input.is_action_pressed("LookDown"):
 		rotation.x = max(V_LOOK_MIN, rotation.x - V_LOOK_SPEED * delta)
+
+	if Input.is_action_pressed("LeftMouseButton"):
+		var x_diff = mouse_coords.x - last_mouse_coords.x
+		var y_diff = mouse_coords.y - last_mouse_coords.y
+		rotation.y -= x_diff * ORBIT_SPEED * MOUSE_SENS_FREE_FLY * delta
+		if rotation.y < 0.0:
+			rotation.y += TWO_PI
+		while rotation.y >= TWO_PI:
+			rotation.y -= TWO_PI
+		rotation.x -= y_diff * V_LOOK_SPEED * MOUSE_SENS_FREE_FLY * delta
+		rotation.x = min(max(rotation.x, V_LOOK_MIN), V_LOOK_MAX)
 
 
 func camera_orbit(delta: float):
@@ -104,12 +117,12 @@ func camera_orbit(delta: float):
 	if Input.is_action_pressed("LeftMouseButton"):
 		var x_diff = mouse_coords.x - last_mouse_coords.x
 		var y_diff = mouse_coords.y - last_mouse_coords.y
-		orbit_angle -= x_diff * ORBIT_SPEED * delta
+		orbit_angle -= x_diff * ORBIT_SPEED * MOUSE_SENS_ORBIT * delta
 		if orbit_angle < 0.0:
 			orbit_angle += TWO_PI
 		while orbit_angle >= TWO_PI:
 			orbit_angle -= TWO_PI
-		orbit_tilt -= y_diff * V_LOOK_SPEED * delta
+		orbit_tilt -= y_diff * V_LOOK_SPEED * MOUSE_SENS_ORBIT * delta
 		orbit_tilt = min(max(orbit_tilt, V_LOOK_MIN), V_LOOK_MAX)
 
 	position.y = -orbit_radius * sin(orbit_tilt)

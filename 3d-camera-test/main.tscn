@@ -1,24 +1,14 @@
 [gd_scene format=3 uid="uid://cq03jr0d1k5vo"]
 
+[ext_resource type="Script" uid="uid://b77t1e7vd1c0r" path="res://main.gd" id="1_7mycd"]
 [ext_resource type="Script" uid="uid://b6px0css4jg1g" path="res://camera.gd" id="1_ig7tw"]
 [ext_resource type="BoxMesh" uid="uid://bf41s60wddban" path="res://Assets/red_box_mesh.tres" id="2_h2yge"]
+[ext_resource type="PackedScene" uid="uid://dr2ugm6hjg125" path="res://line_pixel.tscn" id="2_lquwl"]
 [ext_resource type="BoxMesh" uid="uid://s6ulcgwdwse1" path="res://Assets/blue_box_mesh.tres" id="3_1bvp3"]
 [ext_resource type="BoxMesh" uid="uid://bc31u22k40dkd" path="res://Assets/green_box_mesh.tres" id="4_1bvp3"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0xm2m"]
-albedo_color = Color(0, 1, 1, 1)
-
-[sub_resource type="BoxMesh" id="BoxMesh_h2yge"]
-material = SubResource("StandardMaterial3D_0xm2m")
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1bvp3"]
-albedo_color = Color(1, 0, 1, 1)
-
-[sub_resource type="BoxMesh" id="BoxMesh_lquwl"]
-material = SubResource("StandardMaterial3D_1bvp3")
-
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7mycd"]
-albedo_color = Color(1, 0.5019608, 0, 1)
+albedo_color = Color(0.8784314, 0.8784314, 0.8784314, 1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_272bh"]
 material = SubResource("StandardMaterial3D_7mycd")
@@ -30,6 +20,12 @@ albedo_color = Color(0, 0, 0, 1)
 material = SubResource("StandardMaterial3D_ig7tw")
 
 [node name="Main" type="Node" unique_id=749982082]
+script = ExtResource("1_7mycd")
+linepixel = ExtResource("2_lquwl")
+
+[node name="LineDrawer" type="MeshInstance3D" parent="." unique_id=552464136]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0)
+mesh = SubResource("BoxMesh_272bh")
 
 [node name="Camera" type="Camera3D" parent="." unique_id=1499696717]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 3, 6)
@@ -57,18 +53,6 @@ transform = Transform3D(-0.9999999, 0, -8.742277e-08, 0, 1, 0, 8.742277e-08, 0, 
 
 [node name="DirectionalLight5" type="DirectionalLight3D" parent="." unique_id=1265774194]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, -5, 0)
-
-[node name="Cube1" type="MeshInstance3D" parent="." unique_id=1487628460]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.5, -2)
-mesh = SubResource("BoxMesh_h2yge")
-
-[node name="Cube2" type="MeshInstance3D" parent="." unique_id=1877880551]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.5, -4)
-mesh = SubResource("BoxMesh_lquwl")
-
-[node name="Cube3" type="MeshInstance3D" parent="." unique_id=2005828298]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0.5, 1)
-mesh = SubResource("BoxMesh_272bh")
 
 [node name="Grid" type="Node3D" parent="." unique_id=245541078]
 
